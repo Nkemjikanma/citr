@@ -1,8 +1,18 @@
 {
-  "extends": ["eslint:recommended", "prettier"],
-  "plugins": [],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "react/prop-types": 0, // ignore prop types- prop types are prop validation without TS
+    "react/react-in-jsx-scope": 0
+  },
+  "plugins": ["react", "import", "jsx-a11y"],
   "parserOptions": {
-    "ecmaVersion": "latest",
+    "ecmaVersion": 2022,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -12,5 +22,17 @@
     "es6": true,
     "browser": true,
     "node": true
+  },
+  "settings": {
+    // eslint the version of react we are running - and tell it to detect it from package.json
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      // recognize imnports of these files
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    }
   }
 }
