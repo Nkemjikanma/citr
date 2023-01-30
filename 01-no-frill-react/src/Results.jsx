@@ -14,6 +14,7 @@ const Results = ({ pets }) => {
             breed={pet.breed}
             name={pet.name}
             key={pet.id}
+            id={pet.id}
           />
         ))
       )}
