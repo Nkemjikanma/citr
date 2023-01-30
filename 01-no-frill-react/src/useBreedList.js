@@ -31,7 +31,7 @@ export default function useBreedList(animal) {
       localCache[animal] = json.breeds || [];
 
       setBreedList(localCache[animal]);
-      console.log(localCache);
+
       setStatus("loaded");
     }
   }, [animal]);

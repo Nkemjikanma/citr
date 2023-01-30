@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Pet from "./Pet";
 import useBreedList from "./useBreedList";
+import Results from "./Results";
 
 const ANIMALS = ["birds", "dogs", "cat", "rabbit", "reptile"];
 
@@ -57,6 +57,7 @@ const SearchParams = () => {
               setBreed("");
             }}
           >
+            <option /> {/** this is to add an empty line to the options list */}
             {ANIMALS.map((animal) => (
               <option key={animal}>{animal}</option>
             ))}
@@ -80,16 +81,7 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      <div>
-        {pets.map((pet) => (
-          <Pet
-            name={pet.name}
-            animal={pet.animal}
-            breed={pet.breed}
-            key={pet.id}
-          />
-        ))}
-      </div>
+      <Results pets={pets} />
     </div>
   );
 };
