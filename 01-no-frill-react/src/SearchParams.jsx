@@ -13,12 +13,12 @@ const SearchParams = () => {
 
   useEffect(() => {
     // we want this to be triggered onlly onSubmit
-    requestPets;
+    requestPets();
   }, []);
   // empty dependency array means run this once and never again
   // not adding the dependency array means it should rerun every rerender
 
-  const requestPets = async () => {
+  async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
@@ -26,7 +26,7 @@ const SearchParams = () => {
     const json = await res.json();
 
     setPets(json.pets);
-  };
+  }
 
   return (
     <div className="search-params">
@@ -72,6 +72,7 @@ const SearchParams = () => {
             placeholder="Breed"
             onChange={(e) => setBreed(e.target.value)}
           >
+            <option />
             {breeds.map((breed) => (
               <option key={breed}>{breed}</option>
             ))}
@@ -79,14 +80,16 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      {pets.map((pet) => (
-        <Pet
-          name={pet.name}
-          animal={pet.animal}
-          breed={pet.breed}
-          key={pet.id}
-        />
-      ))}
+      <div>
+        {pets.map((pet) => (
+          <Pet
+            name={pet.name}
+            animal={pet.animal}
+            breed={pet.breed}
+            key={pet.id}
+          />
+        ))}
+      </div>
     </div>
   );
 };
