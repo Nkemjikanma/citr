@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Pet from "./Pet";
+import useBreedList from "./useBreedList";
 
 const ANIMALS = ["birds", "dogs", "cat", "rabbit", "reptile"];
 
@@ -9,7 +10,7 @@ const SearchParams = () => {
   const [breed, setBreed] = useState("");
   const [pets, setPets] = useState([]); // hold list of pets we get from API
 
-  const breeds = [];
+  const [breeds] = useBreedList(animal); // passes animal to customHook and gets breeds
 
   useEffect(() => {
     // we want this to be triggered onlly onSubmit
@@ -22,7 +23,6 @@ const SearchParams = () => {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
-    console.log(res);
     const json = await res.json();
 
     setPets(json.pets);
@@ -67,14 +67,14 @@ const SearchParams = () => {
           Breed
           <select
             id="breed"
-            disabled={breeds.length === 0}
+            disabled={!breeds.length}
             value={breed}
             placeholder="Breed"
             onChange={(e) => setBreed(e.target.value)}
           >
             <option />
-            {breeds.map((breed) => (
-              <option key={breed}>{breed}</option>
+            {breeds.map((breedd) => (
+              <option key={breedd}>{breedd}</option>
             ))}
           </select>
         </label>

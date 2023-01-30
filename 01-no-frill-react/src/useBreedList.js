@@ -1,0 +1,40 @@
+import { useEffect, useState } from "react";
+
+const localCache = {};
+
+// saves animals that have been seen to cache
+export default function useBreedList(animal) {
+  const [breedList, setBreedList] = useState([]);
+  const [status, setStatus] = useState("unloaded"); // used to show different loading states
+
+  useEffect(() => {
+    if (!animal) {
+      // if prop is empty
+      setBreedList([]);
+    } else if (localCache[animal]) {
+      // if prop exists in local cache
+      setBreedList(localCache[animal]);
+    } else {
+      // else call function to make the api call
+      requestBreedList();
+    }
+
+    async function requestBreedList() {
+      setBreedList([]);
+      setStatus("loading");
+
+      const res = await fetch(
+        `http://pets-v2.dev-apis.com/breeds?animal=${animal}`
+      );
+
+      const json = await res.json();
+      localCache[animal] = json.breeds || [];
+
+      setBreedList(localCache[animal]);
+      console.log(localCache);
+      setStatus("loaded");
+    }
+  }, [animal]);
+
+  return [breedList, status];
+}
