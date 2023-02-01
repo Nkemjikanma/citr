@@ -1,52 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useBreedList from "./useBreedList";
 import Results from "./Results";
+import { useQuery } from "@tanstack/react-query";
+import fetchSearch from "./fetchSearch";
 
 const ANIMALS = ["birds", "dogs", "cat", "rabbit", "reptile"];
 
 const SearchParams = () => {
-  const [location, setLocation] = useState("");
+  const [requestParams, setRequestParams] = useState({
+    location: "",
+    animal: "",
+    breed: "",
+  });
   const [animal, setAnimal] = useState("");
-  const [breed, setBreed] = useState("");
-  const [pets, setPets] = useState([]); // hold list of pets we get from API
-
   const [breeds] = useBreedList(animal); // passes animal to customHook and gets breeds
 
-  useEffect(() => {
-    // we want this to be triggered onlly onSubmit
-    requestPets();
-  }, []);
-  // empty dependency array means run this once and never again
-  // not adding the dependency array means it should rerun every rerender
+  const results = useQuery(["search", requestParams], fetchSearch);
+  const pets = results?.data?.pets ?? [];
 
-  async function requestPets() {
-    const res = await fetch(
-      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
-    );
-    const json = await res.json();
-
-    setPets(json.pets);
-  }
-
+  const handleForm = (e) => {
+    const formData = new FormData(e.target);
+    const obj = {
+      animal: formData.get("animal") ?? "",
+      breed: formData.get("breed") ?? "",
+      location: formData.get("location") ?? "",
+    };
+    setRequestParams(obj);
+  };
   return (
     <div className="search-params">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          requestPets();
+          handleForm(e);
         }}
       >
         <label htmlFor="location">
           Location
-          <input
-            id="location"
-            value={location}
-            placeholder="Location"
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          <input id="location" placeholder="Location" name="location" />
         </label>
 
         <label htmlFor="animal">
+          {/* the bit remails controlled by react so we can watch the changes based on the list */}
           Animal
           <select
             id="animal"
@@ -54,7 +49,6 @@ const SearchParams = () => {
             placeholder="Animal"
             onChange={(e) => {
               setAnimal(e.target.value);
-              setBreed("");
             }}
           >
             <option /> {/** this is to add an empty line to the options list */}
@@ -69,9 +63,8 @@ const SearchParams = () => {
           <select
             id="breed"
             disabled={!breeds.length}
-            value={breed}
+            name="breed"
             placeholder="Breed"
-            onChange={(e) => setBreed(e.target.value)}
           >
             <option />
             {breeds.map((breedd) => (
