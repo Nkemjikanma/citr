@@ -10,6 +10,12 @@ class Carousel extends Component {
     images: ["http://pets-images.dev-apis.com/pets/none.jpg"],
   };
 
+  handleIndexClick = (e) => {
+    this.setState({
+      active: +e.target.dataset.index,
+    });
+  };
+
   render() {
     const { active } = this.state; // state is mutable and can be changed using `this.setState`
     const { images } = this.props; // is immutable
@@ -20,10 +26,13 @@ class Carousel extends Component {
         <div className="carousel-smaller">
           {images.map((photo, index) => (
             <img
+              onClick={this.handleIndexClick}
+              data-index={index}
               key={photo}
               src={photo}
               className={index === active ? "active" : ""}
               alt="animal thumbnail"
+              role="img"
             />
           ))}
         </div>
