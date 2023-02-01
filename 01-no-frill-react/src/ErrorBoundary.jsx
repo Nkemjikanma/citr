@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { Link } from "react-router-dom";
 
 class ErrorBoundary extends Component {
   state = { hasError: false };
@@ -16,12 +15,8 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <h2>
-          There was an error with the listing click <Link to="/">HERE</Link> to
-          go back to the HOMEPAGE
-        </h2>
-      );
+      // takes errorComponent as a prop and renders it here
+      return this.props.errorComponent;
     }
     // if no error, seamlessly pass through
     return this.props.children;
