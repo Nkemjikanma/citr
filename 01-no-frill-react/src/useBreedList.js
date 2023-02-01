@@ -1,40 +1,14 @@
-import { useEffect, useState } from "react";
-
-const localCache = {};
+import { useQuery } from "@tanstack/react-query";
+import fetchBreedList from "./fetchBreedList";
 
 // saves animals that have been seen to cache
 export default function useBreedList(animal) {
-  const [breedList, setBreedList] = useState([]);
-  const [status, setStatus] = useState("unloaded"); // used to show different loading states
+  const results = useQuery(["breeds", animal], fetchBreedList);
 
-  useEffect(() => {
-    if (!animal) {
-      // if prop is empty
-      setBreedList([]);
-    } else if (localCache[animal]) {
-      // if prop exists in local cache
-      setBreedList(localCache[animal]);
-    } else {
-      // else call function to make the api call
-      requestBreedList();
-    }
-
-    async function requestBreedList() {
-      setBreedList([]);
-      setStatus("loading");
-
-      const res = await fetch(
-        `http://pets-v2.dev-apis.com/breeds?animal=${animal}`
-      );
-
-      const json = await res.json();
-      localCache[animal] = json.breeds || [];
-
-      setBreedList(localCache[animal]);
-
-      setStatus("loaded");
-    }
-  }, [animal]);
-
-  return [breedList, status];
+  /**
+   * ? `results?` - results is conditional and shouldn't return an error,
+   * ? ?? [] - return empty list if no results?.data.breads
+   * * this is es2021
+   */
+  return [results?.data?.breeds ?? [], results.status];
 }
