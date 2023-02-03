@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import useBreedList from "./useBreedList";
 import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
 import fetchSearch from "./fetchSearch";
-
+import AdoptedPetContext from "./AdoptedPetContext";
 const ANIMALS = ["birds", "dogs", "cat", "rabbit", "reptile"];
 
 const SearchParams = () => {
@@ -14,6 +14,7 @@ const SearchParams = () => {
   });
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal); // passes animal to customHook and gets breeds
+  const [adoptedPet, _] = useContext(AdoptedPetContext); // we are getting adopted pet and ignoring the set
 
   const results = useQuery(["search", requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
@@ -35,6 +36,11 @@ const SearchParams = () => {
           handleForm(e);
         }}
       >
+        {adoptedPet ? (
+          <div className="pet image-container">
+            <img src={adoptedPet.images[0]} alt={adoptedPet.name} />
+          </div>
+        ) : null}
         <label htmlFor="location">
           Location
           <input id="location" placeholder="Location" name="location" />

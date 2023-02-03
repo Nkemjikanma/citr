@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import AdoptedPetContext from "./AdoptedPetContext";
 import { useQuery } from "@tanstack/react-query";
 import Carousel from "./Carousel";
 import fetchPets from "./fetchPets";
@@ -8,6 +9,10 @@ import Modal from "./Modal";
 
 const Details = () => {
   const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate(); // we use this to programatically reroute someone somewere, and here we use it to rout user to homepage
+  // eslint-disable-next-line no-unused-vars
+  const [_, setAdoptedPet] = useContext(AdoptedPetContext); // here, we only care about writing to adopted pet and not reading from it
   const { id } = useParams();
   const results = useQuery(["details", id], fetchPets); // if no detials/id in your cache, run fetchPets
 
@@ -37,7 +42,14 @@ const Details = () => {
           <div>
             <h1> Would you like to adopt {pet.name}? </h1>
             <div className="buttons">
-              <button>Yes</button>
+              <button
+                onClick={() => {
+                  setAdoptedPet(pet);
+                  navigate("/");
+                }}
+              >
+                Yes
+              </button>
               <button onClick={() => setShowModal(false)}>No</button>
             </div>
           </div>
