@@ -4,6 +4,7 @@ import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
 import fetchSearch from "./fetchSearch";
 import AdoptedPetContext from "./AdoptedPetContext";
+import { UseRef } from "./UseRef";
 const ANIMALS = ["birds", "dogs", "cat", "rabbit", "reptile"];
 
 const SearchParams = () => {
@@ -81,6 +82,9 @@ const SearchParams = () => {
         <button>Submit</button>
       </form>
       <Results pets={pets} />
+      <div>
+        <UseRef />
+      </div>
     </div>
   );
 };
