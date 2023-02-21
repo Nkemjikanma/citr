@@ -50,7 +50,7 @@ const SearchParams = () => {
             id="location"
             placeholder="Location"
             name="location"
-            className="mb-5 block w-60"
+            className="search-input"
           />
         </label>
 
@@ -80,7 +80,7 @@ const SearchParams = () => {
             disabled={!breeds.length}
             name="breed"
             placeholder="Breed"
-            className="mb-5 block w-60 disabled:opacity-50"
+            className="search-input grayed-out-disable"
           >
             <option />
             {breeds.map((breedd) => (
