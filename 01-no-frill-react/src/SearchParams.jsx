@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useDeferredValue, useMemo, useTransition } from "react";
 import useBreedList from "./useBreedList";
 import Results from "./Results";
 import { useQuery } from "@tanstack/react-query";
@@ -16,9 +16,15 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal); // passes animal to customHook and gets breeds
   const [adoptedPet, _] = useContext(AdoptedPetContext); // we are getting adopted pet and ignoring the set
+  const [isPending, startTransition] = useTransition();
 
   const results = useQuery(["search", requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
+
+  const deferredPets = useDeferredValue(pets) // using the useDeferredValue hook to render Results component
+  const renderedPets = useMemo(() => {
+    <Results pets={deferredPets}/>, [deferredPets]
+  })
 
   const handleForm = (e) => {
     const formData = new FormData(e.target);
@@ -92,7 +98,7 @@ const SearchParams = () => {
           Submit
         </button>
       </form>
-      <Results pets={pets} />
+      {renderedPets}
       <div>
         <UseRef />
       </div>

@@ -14,6 +14,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: Infinity, // once you've fetch, don't refetch
       cacheTime: Infinity,
+      suspense:true // experimental feature in reactq
     },
   },
 });
